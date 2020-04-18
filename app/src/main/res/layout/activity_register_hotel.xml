@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterHotelActivity">
+
+    <EditText
+        android:id="@+id/hotelName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Enter Hotel Name"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/hotelEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textEmailAddress"
+        android:hint="Enter Email" />
+    <EditText
+        android:id="@+id/hotelNumber"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone"
+        android:hint="Enter Number" />
+
+    <EditText
+        android:id="@+id/hotelPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Enter Password" />
+
+    <Button
+        android:id="@+id/placePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Location"/>
+    <EditText
+        android:id="@+id/hotelLatitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:hint="Latitude" />
+    <EditText
+        android:id="@+id/hotelLongitude"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:hint="Longitude" />
+
+    <Button
+        android:id="@+id/getRegisterHotel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Register" />
+
+    <ProgressBar
+        android:id="@+id/progressBarRegisterHotel"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        tools:visibility="invisible" />
+
+</LinearLayout>

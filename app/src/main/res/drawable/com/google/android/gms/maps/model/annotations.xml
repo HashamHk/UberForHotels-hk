@@ -1,0 +1,6 @@
+<root>
+    <item
+        name='com.google.android.gms.maps.model.MarkerOptions com.google.android.gms.maps.model.MarkerOptions position(com.google.android.gms.maps.model.LatLng)'>
+        <annotation name='java.lang.Deprecated' />
+    </item>
+</root>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/mainactivitybackground"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <Button
+        android:id="@+id/hotelLoginButton"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_margin="100dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:text="Hotel" />
+
+    <Button
+        android:id="@+id/userLoginButton"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_margin="0dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:text="User" />
+
+    <Button
+        android:id="@+id/adminLoginButton"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:layout_margin="100dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:text="Admin" />
+
+</LinearLayout>
