@@ -17,12 +17,15 @@ public class HotelHomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_hotel);
-
+        Intent intent = getIntent();
+        final String hotelEmail=intent.getStringExtra("hotelEmail");
         addRoomsButton = findViewById(R.id.addRooms);
         addRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intToAddRooms = new Intent(HotelHomeActivity.this, AddRoomsActivity.class);
+                intToAddRooms.putExtra("hotelEmail", hotelEmail);
+
                 startActivity(intToAddRooms);
             }
         });

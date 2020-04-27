@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "714187251860-nb9v6tppoop0s79naog6d8tq2vu2u1jl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.uberforhotels",
+            "certificate_hash": "e77ae8138c81033eeff0208c53eaffbd7504560d"
+          }
+        },
+        {
           "client_id": "714187251860-nnbsbsscafbefrvp8eghc47puepcctff.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

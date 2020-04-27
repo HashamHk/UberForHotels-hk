@@ -3,15 +3,21 @@ package com.test.uberforhotels;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.loader.content.CursorLoader;
 
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -24,7 +30,11 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.IOException;
+import java.util.UUID;
+
 public class AddRoomsActivity extends AppCompatActivity {
+    private ImageView imageView;
 
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText edit_text_file_name, roomNumber, numberOfBeds, internet, roomRent;
@@ -33,27 +43,25 @@ public class AddRoomsActivity extends AppCompatActivity {
 
     private Uri mImageUri;
 
-    private StorageReference mStorageRef;
-    private DatabaseReference mDatabaseRef;
-
+    FirebaseStorage storage;
+    StorageReference storageReference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_rooms);
 
-        edit_text_file_name = findViewById(R.id.edit_text_file_name);
         roomNumber = findViewById(R.id.roomNumber);
         numberOfBeds = findViewById(R.id.numberOfBeds);
         internet = findViewById(R.id.internet);
         roomRent = findViewById(R.id.roomRent);
-
-        mStorageRef = FirebaseStorage.getInstance().getReference("Room");
-        mDatabaseRef = FirebaseDatabase.getInstance().getReference("Room");
-
+        imageView = (ImageView) findViewById(R.id.imgView);
         choose_image_button = findViewById(R.id.choose_image_button);
         roomSaveButton = findViewById(R.id.roomSaveButton);
 
         hotelRoomsStore = FirebaseFirestore.getInstance();
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         choose_image_button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,8 +74,8 @@ public class AddRoomsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 uploadImage();
-                Toast.makeText(AddRoomsActivity.this, "Room Added Successfully", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getApplicationContext(),AddRoomsActivity.class));
+
+                //startActivity(new Intent(getApplicationContext(),AddRoomsActivity.class));
             }
         });
     }
@@ -76,16 +84,26 @@ public class AddRoomsActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            mImageUri = data.getData();
 
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                               && data != null && data.getData() != null){
+            Toast.makeText(AddRoomsActivity.this, "HERE"+mImageUri.getLastPathSegment(), Toast.LENGTH_SHORT).show();
 
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
+                imageView.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
     private String getImageExtention(Uri uri){
@@ -93,31 +111,48 @@ public class AddRoomsActivity extends AppCompatActivity {
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
-
     private void uploadImage() {
-        if (mImageUri != null){
-            StorageReference imageReference = mStorageRef.child(System.currentTimeMillis()
-            + "." + getImageExtention(mImageUri));
 
-            Toast.makeText(AddRoomsActivity.this,mImageUri.getPath(),Toast.LENGTH_LONG).show();
-//
-            imageReference.putFile(mImageUri)
+        if(mImageUri != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            String imageName= UUID.randomUUID().toString();
+            StorageReference ref = storageReference.child("images/"+ imageName);
+            //
+            //THIS IS YOUR HOTEL EMAIL AS WELL. STORE IT IN THE FIREBASE ALONG WITH  ROOM INFO
+            Intent intent = getIntent();
+            final String hotelEmail=intent.getStringExtra("hotelEmail");
+            Toast.makeText(AddRoomsActivity.this, hotelEmail, Toast.LENGTH_SHORT).show();
+
+            // STORE THE ROOM INFORMATION IN THE FIREBASE. make a field called imagename and store this imageName variable in that.
+
+            //
+            ref.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(AddRoomsActivity.this,"Image Uploaded Successfully",Toast.LENGTH_LONG).show();
-//                            String uploadId = mDatabaseRef.push().getKey();
-//                            mDatabaseRef.child(uploadId).setValue();
+                            progressDialog.dismiss();
+                            Toast.makeText(AddRoomsActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(AddRoomsActivity.this,e.getMessage(),Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            Toast.makeText(AddRoomsActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
                         }
                     });
-        } else {
-            Toast.makeText(this,"No File Selected",Toast.LENGTH_SHORT).show();
         }
     }
+
 }

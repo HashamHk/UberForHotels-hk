@@ -41,7 +41,7 @@ public class LoginHotelActivity extends AppCompatActivity {
         getHotelLoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String emailHotel = hotelEmail.getText().toString().trim();
+                final String emailHotel = hotelEmail.getText().toString().trim();
                 String passwordHotel = hotelPassword.getText().toString().trim();
 
                 if (TextUtils.isEmpty(emailHotel)){
@@ -63,7 +63,9 @@ public class LoginHotelActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()){
                             Toast.makeText(LoginHotelActivity.this, "Hotel Logged In Successfully",Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),HotelHomeActivity.class));
+                            Intent intent=new Intent(getApplicationContext(),HotelHomeActivity.class);
+                            intent.putExtra("hotelEmail",emailHotel);
+                            startActivity(intent);
                         }
                         else {
                             Toast.makeText(LoginHotelActivity.this, "Something went wrong ! Please Login again",Toast.LENGTH_SHORT).show();
