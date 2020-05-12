@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ImageView
+        android:id="@+id/imageView_room"
+        android:layout_width="425dp"
+        android:layout_height="193dp"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <TextView
+        android:id="@+id/textView_roomNumber"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="TextView"
+        android:textSize="25dp"
+        android:textAlignment="center"/>
+
+    <TextView
+        android:id="@+id/textView_numberOfBeds"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="TextView"
+        android:textSize="25dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textView_internet"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="TextView"
+        android:textSize="25dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textView_roomRent"
+        android:layout_width="match_parent"
+        android:layout_height="47dp"
+        android:text="TextView"
+        android:textSize="25dp"
+        android:textAlignment="center" />
+
+</LinearLayout>

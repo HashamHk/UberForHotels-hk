@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
@@ -31,15 +33,17 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class AddRoomsActivity extends AppCompatActivity {
     private ImageView imageView;
-
+     String hotelEmail;
     private static final int PICK_IMAGE_REQUEST = 1;
     EditText edit_text_file_name, roomNumber, numberOfBeds, internet, roomRent;
     Button choose_image_button, roomSaveButton;
-    FirebaseFirestore hotelRoomsStore;
+    FirebaseFirestore roomStore;
 
     private Uri mImageUri;
 
@@ -57,9 +61,11 @@ public class AddRoomsActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.imgView);
         choose_image_button = findViewById(R.id.choose_image_button);
         roomSaveButton = findViewById(R.id.roomSaveButton);
+        Intent intent = getIntent();
+        hotelEmail=intent.getStringExtra("hotelEmail");
+        Toast.makeText(AddRoomsActivity.this, hotelEmail, Toast.LENGTH_SHORT).show();
 
-        hotelRoomsStore = FirebaseFirestore.getInstance();
-
+        roomStore = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
@@ -75,7 +81,10 @@ public class AddRoomsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 uploadImage();
 
-                //startActivity(new Intent(getApplicationContext(),AddRoomsActivity.class));
+                Intent intentAddRoom = new Intent(getApplicationContext(), AddRoomsActivity.class);
+                intentAddRoom.putExtra("hotelEmail", hotelEmail);
+
+                startActivity(intentAddRoom);
             }
         });
     }
@@ -94,9 +103,7 @@ public class AddRoomsActivity extends AppCompatActivity {
         {
             mImageUri = data.getData();
 
-            Toast.makeText(AddRoomsActivity.this, "HERE"+mImageUri.getLastPathSegment(), Toast.LENGTH_SHORT).show();
-
-            try {
+                     try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), mImageUri);
                 imageView.setImageBitmap(bitmap);
             }
@@ -120,15 +127,39 @@ public class AddRoomsActivity extends AppCompatActivity {
             progressDialog.show();
             String imageName= UUID.randomUUID().toString();
             StorageReference ref = storageReference.child("images/"+ imageName);
-            //
-            //THIS IS YOUR HOTEL EMAIL AS WELL. STORE IT IN THE FIREBASE ALONG WITH  ROOM INFO
-            Intent intent = getIntent();
-            final String hotelEmail=intent.getStringExtra("hotelEmail");
-            Toast.makeText(AddRoomsActivity.this, hotelEmail, Toast.LENGTH_SHORT).show();
 
-            // STORE THE ROOM INFORMATION IN THE FIREBASE. make a field called imagename and store this imageName variable in that.
+//            Intent intent = getIntent();
+//             hotelEmail=intent.getStringExtra("hotelEmail");
+//            Toast.makeText(AddRoomsActivity.this, hotelEmail, Toast.LENGTH_SHORT).show();
 
-            //
+            final String numberRoom = roomNumber.getText().toString().trim();
+            final String numberBeds = numberOfBeds.getText().toString().trim();
+            final String internetRoom = internet.getText().toString().trim();
+            final String rentRoom = roomRent.getText().toString().trim();
+
+            Map<String, Object> room = new HashMap<>();
+            room.put("imageName", imageName);
+            room.put("roomNumber", numberRoom);
+            room.put("numberOfBeds", numberBeds);
+            room.put("internetAvailability", internetRoom);
+            room.put("roomRent", rentRoom);
+            room.put("hotelEmail", hotelEmail);
+
+            roomStore.collection("rooms").document()
+                    .set(room)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(AddRoomsActivity.this, "Successfully Added Room", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(AddRoomsActivity.this, "Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
             ref.putFile(mImageUri)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -153,6 +184,6 @@ public class AddRoomsActivity extends AppCompatActivity {
                         }
                     });
         }
+//        Toast.makeText(AddRoomsActivity.this, getImageExtention(mImageUri), Toast.LENGTH_SHORT).show();
     }
-
 }

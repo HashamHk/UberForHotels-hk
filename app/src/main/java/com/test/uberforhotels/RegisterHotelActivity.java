@@ -56,8 +56,6 @@ public class RegisterHotelActivity extends AppCompatActivity {
         hotelNumber = findViewById(R.id.hotelNumber);
         hotelPassword = findViewById(R.id.hotelPassword);
         placePickerButton = findViewById(R.id.placePicker);
-        hotelLatitude = findViewById(R.id.hotelLatitude);
-        hotelLongitude = findViewById(R.id.hotelLongitude);
         getRegisterHotelButton = findViewById(R.id.getRegisterHotel);
 
         hAuth = FirebaseAuth.getInstance();
@@ -96,8 +94,6 @@ public class RegisterHotelActivity extends AppCompatActivity {
                 String passwordHotel = hotelPassword.getText().toString().trim();
                 final String nameHotel = hotelName.getText().toString();
                 final String numberHotel = hotelNumber.getText().toString();
-                final String latitudeHotel = hotelLatitude.getText().toString();
-                final String longitudeHotel = hotelLongitude.getText().toString();
 
 
                 if (TextUtils.isEmpty(emailHotel)){
@@ -106,14 +102,6 @@ public class RegisterHotelActivity extends AppCompatActivity {
                 }
                 if (TextUtils.isEmpty(passwordHotel)){
                     hotelPassword.setError("Password is required");
-                    return;
-                }
-                if (TextUtils.isEmpty(latitudeHotel)){
-                    hotelLatitude.setError("Latitude is required");
-                    return;
-                }
-                if (TextUtils.isEmpty(longitudeHotel)){
-                    hotelLongitude.setError("Longitude is required");
                     return;
                 }
                 if (passwordHotel.length() < 6){

@@ -10,8 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class HotelHomeActivity extends AppCompatActivity {
-    Button logoutHotelButton;
-    Button addRoomsButton;
+    Button logoutHotelButton, addRoomsButton, viewAddedRoomButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,10 +22,19 @@ public class HotelHomeActivity extends AppCompatActivity {
         addRoomsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intToAddRooms = new Intent(HotelHomeActivity.this, AddRoomsActivity.class);
-                intToAddRooms.putExtra("hotelEmail", hotelEmail);
+                Intent inToAddRooms = new Intent(HotelHomeActivity.this, AddRoomsActivity.class);
+                inToAddRooms.putExtra("hotelEmail", hotelEmail);
 
-                startActivity(intToAddRooms);
+                startActivity(inToAddRooms);
+            }
+        });
+
+        viewAddedRoomButton = findViewById(R.id.viewAddedRooms);
+        viewAddedRoomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent inToViewRoom = new Intent(HotelHomeActivity.this, HotelShowAddedRoomActivity.class);
+                startActivity(inToViewRoom);
             }
         });
 
@@ -35,8 +43,8 @@ public class HotelHomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
-                Intent intToLogin = new Intent(HotelHomeActivity.this, LoginHotelActivity.class);
-                startActivity(intToLogin);
+                Intent inToLogin = new Intent(HotelHomeActivity.this, LoginHotelActivity.class);
+                startActivity(inToLogin);
             }
         });
     }

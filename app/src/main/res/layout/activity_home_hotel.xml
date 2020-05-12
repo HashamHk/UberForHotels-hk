@@ -32,16 +32,24 @@
     <Button
         android:id="@+id/addRooms"
         android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_margin="50dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
         android:backgroundTint="@android:color/darker_gray"
         android:text="Add Rooms" />
 
     <Button
+        android:id="@+id/viewAddedRooms"
+        android:layout_width="120dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
+        android:backgroundTint="@android:color/darker_gray"
+        android:text="View Added Rooms" />
+
+    <Button
         android:id="@+id/hotelLogoutButton"
         android:layout_width="120dp"
-        android:layout_height="50dp"
-        android:layout_margin="50dp"
+        android:layout_height="60dp"
+        android:layout_margin="0dp"
         android:backgroundTint="@android:color/darker_gray"
         android:text="Logout" />
 
