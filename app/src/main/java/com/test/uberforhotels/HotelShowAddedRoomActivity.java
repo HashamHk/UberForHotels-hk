@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -18,6 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class HotelShowAddedRoomActivity extends AppCompatActivity {
 
@@ -43,15 +47,16 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reff = (DatabaseReference) FirebaseDatabase.getInstance().getReference().orderByChild("rooms").equalTo("hotelEmail");
+                reff = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("rooms");
                 reff.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        String roomNumber = dataSnapshot.child("roomNumber").getValue().toString();
-                        String roomRent = dataSnapshot.child("roomRent").getValue().toString();
-                        String numberOfBeds = dataSnapshot.child("numberOfBeds").getValue().toString();
-                        String internetAvailability = dataSnapshot.child("internetAvailability").getValue().toString();
+//                        String roomNumber = dataSnapshot.child("roomNumber").getValue().toString();
+//                        String roomRent = dataSnapshot.child("roomRent").getValue().toString();
+//                        String numberOfBeds = dataSnapshot.child("numberOfBeds").getValue().toString();
+//                        String internetAvailability = dataSnapshot.child("internetAvailability").getValue().toString();
 
+                        getAddedRooms((Map<String,Object>)dataSnapshot.getValue());
 
                     }
 
@@ -60,6 +65,21 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
 
                     }
                 });
+            }
+
+            private void getAddedRooms(Map<String, Object> rooms) {
+                ArrayList<Long> roomRent = new ArrayList<>();
+
+                for (Map.Entry<String, Object> entry : rooms.entrySet()){
+
+                    Map singleUser = (Map) entry.getValue();
+
+                    roomRent.add((Long) singleUser.get("roomRent"));
+                }
+
+                Toast.makeText(HotelShowAddedRoomActivity.this, (CharSequence) roomRent,Toast.LENGTH_SHORT).show();
+
+//                System.out.println(roomRent.toString());
             }
         });
 
