@@ -162,7 +162,7 @@ public class RegisterHotelActivity extends AppCompatActivity {
                 lon=(float)addressData.getLongitude();
 
 
-                Toast.makeText(RegisterHotelActivity.this, (String)Float.toString(lat),
+                Toast.makeText(RegisterHotelActivity.this, Float.toString(lat),
                         Toast.LENGTH_LONG).show();
             }
         } else {

@@ -58,7 +58,7 @@ public class AddRoomsActivity extends AppCompatActivity {
         numberOfBeds = findViewById(R.id.numberOfBeds);
         internet = findViewById(R.id.internet);
         roomRent = findViewById(R.id.roomRent);
-        imageView = (ImageView) findViewById(R.id.imgView);
+        imageView = findViewById(R.id.imgView);
         choose_image_button = findViewById(R.id.choose_image_button);
         roomSaveButton = findViewById(R.id.roomSaveButton);
         Intent intent = getIntent();

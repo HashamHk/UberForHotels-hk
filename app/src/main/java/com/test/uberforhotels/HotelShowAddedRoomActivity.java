@@ -3,6 +3,7 @@ package com.test.uberforhotels;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
 
     Button button;
 
-    DatabaseReference reff;
+//    DatabaseReference reff;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +48,8 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                reff = (DatabaseReference) FirebaseDatabase.getInstance().getReference().child("rooms");
-                reff.addValueEventListener(new ValueEventListener() {
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("rooms");
+                databaseReference.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 //                        String roomNumber = dataSnapshot.child("roomNumber").getValue().toString();
@@ -65,6 +66,8 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
 
                     }
                 });
+                Intent inToViewRoom = new Intent(HotelShowAddedRoomActivity.this, HotelShowAddedRoomActivity.class);
+                startActivity(inToViewRoom);
             }
 
             private void getAddedRooms(Map<String, Object> rooms) {
@@ -77,50 +80,51 @@ public class HotelShowAddedRoomActivity extends AppCompatActivity {
                     roomRent.add((Long) singleUser.get("roomRent"));
                 }
 
-                Toast.makeText(HotelShowAddedRoomActivity.this, (CharSequence) roomRent,Toast.LENGTH_SHORT).show();
+                Toast.makeText(HotelShowAddedRoomActivity.this, (CharSequence) roomRent, Toast.LENGTH_LONG).show();
 
 //                System.out.println(roomRent.toString());
+
             }
         });
 
-        CustomAdapter customAdapter = new CustomAdapter();
-
-        listView.setAdapter(customAdapter);
+//        CustomAdapter customAdapter = new CustomAdapter();
+//
+//        listView.setAdapter(customAdapter);
     }
-
-    class CustomAdapter extends BaseAdapter{
-        @Override
-        public int getCount() {
-            return IMAGES.length;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int i, View convertView, ViewGroup parent) {
-            View view = getLayoutInflater().inflate(R.layout.custom_list_layout, null);
-
-            ImageView imageView = (ImageView)findViewById(R.id.imageView_room);
-            TextView textView_roomNumber = (TextView)findViewById(R.id.textView_roomNumber);
-            TextView textView_numberOfBeds = (TextView)findViewById(R.id.textView_numberOfBeds);
-            TextView textView_internet = (TextView)findViewById(R.id.textView_internet);
-            TextView textView_roomRent = (TextView)findViewById(R.id.textView_roomRent);
-
-            imageView.setImageResource(Integer.parseInt((IMAGES[i])));
-            textView_roomNumber.setText(ROOM_NUMBER[i]);
-            textView_numberOfBeds.setText(NUMBER_OF_BEDS[i]);
-            textView_internet.setText(INTERNET[i]);
-            textView_roomRent.setText(ROOM_RENT[i]);
-
-            return view;
-        }
-    }
+//
+//    class CustomAdapter extends BaseAdapter{
+//        @Override
+//        public int getCount() {
+//            return IMAGES.length;
+//        }
+//
+//        @Override
+//        public Object getItem(int position) {
+//            return null;
+//        }
+//
+//        @Override
+//        public long getItemId(int position) {
+//            return 0;
+//        }
+//
+//        @Override
+//        public View getView(int i, View convertView, ViewGroup parent) {
+//            View view = getLayoutInflater().inflate(R.layout.custom_list_layout, null);
+//
+//            ImageView imageView = (ImageView)findViewById(R.id.imageView_room);
+//            TextView textView_roomNumber = (TextView)findViewById(R.id.textView_roomNumber);
+//            TextView textView_numberOfBeds = (TextView)findViewById(R.id.textView_numberOfBeds);
+//            TextView textView_internet = (TextView)findViewById(R.id.textView_internet);
+//            TextView textView_roomRent = (TextView)findViewById(R.id.textView_roomRent);
+//
+//            imageView.setImageResource(Integer.parseInt((IMAGES[i])));
+//            textView_roomNumber.setText(ROOM_NUMBER[i]);
+//            textView_numberOfBeds.setText(NUMBER_OF_BEDS[i]);
+//            textView_internet.setText(INTERNET[i]);
+//            textView_roomRent.setText(ROOM_RENT[i]);
+//
+//            return view;
+//        }
+//    }
 }
